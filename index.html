@@ -47,6 +47,7 @@
 
 <section class="slide">
   <h2>A. Basic exception handling</h2>
+  <h2>(Scala <= 2.10.0/2.9.3)</h2>
 Since Scala's try/catch blocks use pattern matching,
 this section is just a review of what patterns are available to you.
 </section>
@@ -66,6 +67,8 @@ def readFile(path: String) =
 <section class="slide">
   <h2>A1. Catch an exception</h2>
   <pre class="brush: scala;">
+import java.io.IOException
+
 try {
   readFile("/opt/data")
 }
@@ -78,11 +81,14 @@ catch {
 <section class="slide">
   <h2>A2. Catching Multiple Exceptions</h2>
   <pre class="brush: scala;">
+import java.io.IOException
+import java.lang.NumberFormatException
+
 try {
   readFile("/opt/social-security").toInt
 }
 catch {
-  case e: IOException | NumberFormatException =>
+  case e @ (_: IOException | _: NumberFormatException) =>
 }
   </pre>
 </section>
@@ -135,6 +141,7 @@ try {
   readFile("/opt/data").toInt
 }
 catch {
+  //this will match scala.util.control.ControlThrowable
   case _ =>
 }
   </pre>
@@ -144,8 +151,6 @@ catch {
 <section class="slide">
   <h2>A7. Catching all <code>Throwable</code></h2>
   <pre class="brush: scala;">
-import scala.util.control.ControlThrowable
-
 try {
   readFile("/opt/data").toInt
 }
@@ -157,18 +162,30 @@ catch {
 </section>
 
 <section class="slide">
-  <h2>What's wrong with exceptions?</h2>
+  <h2>B. What's wrong with exceptions?</h2>
 </section>
 
 <section class="slide">
-  <h2>Should I throw an exception?</h2>
+  <h2>C. Should I throw an exception?</h2>
+  <ul>
+    <li>
+      Answer 1: No.
+    </li>
+    <li>
+      Answer 2: If you're going to catch it, no.
+    </li>
+    <li>
+      Answer 3: If you're going to catch it anywhere except the top-level "loop" of your application (E.g., Scalatra route handler, Play action, or Swing event loop), no.
+    </li>
+  </ul>
 </section>
 
 
 
 
 <section class="slide">
-  <h2>Scala 2.10 exception handling</h2>
+  <h2>D. Value-oriented exception handling</h2>
+  <h2>(Scala >= 2.10.0/2.9.3)</h2>
 </section>
 
 
