@@ -83,7 +83,8 @@
 <pre class="brush: scala;">
 import scala.io.Source
 
-def readFile(path: String) = (Source fromFile path).mkString()
+def readFile(path: String) =
+  (Source fromFile path).mkString()
 </pre>
 </section>
 
@@ -119,7 +120,8 @@ catch {
 <section class="slide">
   <h2>A3. Subtyping exceptions</h2>
   <pre class="brush: scala;">
-import java.nio.file.{ Files, FileSystemException, FileSystems }
+import java.nio.file.{ Files, FileSystemException,
+                       FileSystems }
 
 try {
   val path = FileSystems.getDefault getPath "/opt/data"
@@ -142,7 +144,8 @@ try {
   readFile("/opt/data").toInt
 }
 catch {
-  case e: IOException if e.getMessage contains "Is a directory" =>
+  case e: IOException
+    if e.getMessage contains "Is a directory" =>
   case e: IOException =>
 }
   </pre>
@@ -328,9 +331,11 @@ case object None         extends Option[Nothing]
    <h2>D2. Only consider Some</h2>
    <h2>(Option[A], A => B)) => Option[B]</h2>
   <pre class="brush: scala;">
-    val sOpt: Option[String] = iOpt map { value => value.toString }
+    val sOpt: Option[String] =
+      iOpt map { value => value.toString }
 
-    val sOpt: Option[String] = iOpt map { _.toString }
+    val sOpt: Option[String] =
+      iOpt map { _.toString }
   </pre>
 </section>
 
@@ -520,7 +525,10 @@ type ValidationNEL[E, A] = Validation[NonEmptyList[E], A]
 <section class="slide">
  <h2>Consider this domain</h2>
  <pre class="brush: scala;">
-class Person(age: Int, clothes: String, sober: Boolean, male: Boolean)
+class Person(
+  age: Int, clothes: String,
+  sober: Boolean, male: Boolean
+)
 
 def checkAge(p: Person): Validation[String, Person] =
   if (p.age < 18) Failure("too young!") else Success(p)
@@ -662,11 +670,12 @@ def cost(p : Person) : ValidationNEL[String, Int] = {
     checkClothes _,
     checkSobriety _
   )
-  checks.traverse[({type λ[α] = ValidationNEL[String, α]})#λ, Person](
-    _ andThen (_.liftFailNel) apply p
-  ) map {
-    case c :: _ => if (c.male) 50 else 25
-  }
+  checks.traverse[({type λ[α] =
+    ValidationNEL[String, α]})#λ, Person](
+      _ andThen (_.liftFailNel) apply p
+    ) map {
+      case c :: _ => if (c.male) 50 else 25
+    }
 }
  </pre>
 </section>
@@ -675,12 +684,6 @@ def cost(p : Person) : ValidationNEL[String, Int] = {
 
 
 
-
-
-
-<section class="slide">
-  <h1>Aside:<br> Kleisli arrows</h1>
-</section>
 
 
 
