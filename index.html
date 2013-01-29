@@ -440,6 +440,23 @@ case object None         extends Option[Nothing]
   </pre>
 </section>
 
+<section class="slide">
+   <h2>D11. Only execute if all the Options are defined</h2>
+
+  <pre class="brush: scala;">
+    val iOpt: Option[Int] = //...
+    val cOpt: Option[Char] = //...
+    val dOpt: Option[Double] = //...
+
+    val sOpt: Option[String] = for {
+      i <- iOpt
+      c <- cOpt
+      d <- dOpt
+    } yield s"$i$s$d"
+  </pre>
+</section>
+
+
 
 
 
