@@ -50,7 +50,7 @@
 
 
 
-
+<!-- INTRO -->
 
 <section class="slide">
   <h2>Error Handling in Scala</h2>
@@ -183,6 +183,7 @@ catch {
 </section>
 
 
+
 <!-- SECTION B: Exceptions not pure. -->
 
 <section class="slide">
@@ -221,6 +222,7 @@ catch {
     </li>
   </ul>
 </section>
+
 
 
 <!-- SECTION C: Try -->
@@ -283,13 +285,10 @@ case class Success[A](value: A)     extends Try[A]
 
 
 
-
-
-
 <!-- SECTION D: Option -->
 
 <section class="slide">
-  <h1>Section D:<br> scala.Option</h1>
+  <h1>Section D:<br> Option[A]</h1>
 </section>
 
 <section class="slide">
@@ -367,89 +366,108 @@ case object None         extends Option[Nothing]
 </section>
 
 
+
 <!-- SECTION E: Either -->
 
 <section class="slide">
-  <h1>Section E:<br> scala.util.Either</h1>
+  <h1>Section E:<br> Either[E, A]</h1>
 </section>
 
 <section class="slide">
+  <h2>Either[E, A] (slightly simplified)</h2>
   <pre class="brush: scala;">
 sealed trait Either[E, A]
+
 case class Left[E](e: E) extends Either[E, A]
+
 case class Right[A](a: A) extends Either[E, A]
   </pre>
 </section>
 
 
-<!-- SECTION F: Box -->
+
+<!-- SECTION F: ValidationNEL -->
 
 <section class="slide">
-  <h1>Section F:<br> net.liftweb.common.Box</h1>
+  <h1>Section F:<br>Scalaz's Validation[E, A]</h1>
 </section>
 
 <section class="slide">
+ <h2>Validation[E, A] (slightly simplified)</h2>
+ <pre class="brush: scala;">
+sealed trait Validation[E, A]
+
+case class Success[E, A](a: A) extends Validation[E, A]
+
+case class Failure[E, A](e: E) extends Validation[E, A]
+  </pre>
+</section>
+
+<section class="slide">
+  <h2>Validation[E, A] is very similar to Either[E, A]</h2>
+  <h2>I won't repeat all the Either patterns.</h2>
+  <h2>Caution:<br>syntax is in flux during the Scalaz 6 -> 7 rewrite.</h2>
+</section>
+
+<section class="slide">
+  <h2>Wouldn't it be nice if we could accumulate errors, instead of stopping on the first one?</h2>
+</section>
+
+<section class="slide">
+  <h2>ValidationNEL (slightly simplified)</h2>
+  <pre class="brush: scala;">
+case class NonEmptyList[A](head: A, tail: List[A])
+
+type ValidationNEL[E, A] = Validation[NonEmptyList[E], A]
+  </pre>
+</section>
+
+<section class="slide">
+  <h1>Aside:<br>type lambdas</h1>
+</section>
+
+<section class="slide">
+  <h1>Aside:<br> Kleisli arrows</h1>
+</section>
+
+
+
+<!-- SECTION G: Box -->
+
+<section class="slide">
+  <h1>Section G:<br> Lift's Box[A]</h1>
+</section>
+
+<section class="slide">
+  <h2>Box[A] (slightly simplified)</h2>
   <pre class="brush: scala;">
 sealed trait Box[A]
 
 case class Full[A](a: A) extends Box[A]
 
 abstract class EmptyBox extends Box[Nothing]
-case class Failure(msg: String, e: Box[Throwable], chain: Box[Failure])
-  extends EmptyBox
+
+case class Failure(
+  msg: String, e: Box[Throwable], chain: Box[Failure]
+) extends EmptyBox
+
 case class Empty extends EmptyBox
   </pre>
 </section>
 
-
-<!-- SECTION G: Validation -->
-
 <section class="slide">
-  <h2>Validation[A, B]</h2>
-</section>
-
-<section class="slide">
- <pre class="brush: scala;">
-sealed trait Validation[E, A]
-case class Success[E, A](a: A) extends Validation[E, A]
-case class Failure[E, A](e: E) extends Validation[E, A]
-  </pre>
+  <h2>Sorry! No time for Box.</h2>
+  <h2>Take home message:<br> Box isn't perfect, but check it out for an alternative way to accumulate errors.</h2>
 </section>
 
 
 
-<!-- SECTION G: ValidationNEL -->
-
-<section class="slide">
-  <h2>ValidationNEL[A, B]</h2>
-</section>
-
-<section class="slide">
- <pre class="brush: scala;">
-type ValidationNEL[A, B] = Validation[NonEmptyList[A], B]
-  </pre>
-</section>
-
-<section class="slide">
-  <h2>Let's <em>accumulate</em> errors!</h2>
-</section>
-
-<section class="slide">
-  <h1>Aside<br>type lambdas</h1>
-</section>
-
-<section class="slide">
-  <h1>Aside<br> Kleisli arrows</h1>
-</section>
+<!-- THE END -->
 
 <section class="slide">
   <h1>Phew!</h1>
   <h2>The end.</h2>
 </section>
-
-
-
-
 
 
 
