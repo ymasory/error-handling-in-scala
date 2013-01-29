@@ -335,39 +335,111 @@ case object None         extends Option[Nothing]
 </section>
 
 <section class="slide">
-   <h2>D3. Only consider None</h2>
+   <h2>D3. More chances</h2>
+  <h2>(Option[A], Option[A]) => Option[A]</h2>
+
+  <pre class="brush: scala;">
+    def foo(i: Int): Option[String]
+
+    val sOpt: Option[String] =
+      foo(1).orElse {
+        foo(2).orElse {
+          foo(3).orElse {
+            foo(4)
+          }
+        }
+      }
+  </pre>
 </section>
 
 <section class="slide">
-   <h2>D4. Consider both cases</h2>
+  <h2>D4. Consider both cases</h2>
+  <h2>(Option[A], B, A => B)) => B</h2>
+
+  <pre class="brush: scala;">
+    val sOpt: Option[String] =
+      iOpt.fold("") { _.toString }
+  </pre>
+
 </section>
 
 <section class="slide">
-   <h2>D5. Provide default value</h2>
-   <h2>(Option[A], A) => A</h2>
+  <h2>D5. Provide default value</h2>
+  <h2>(Option[A], A) => A</h2>
+
   <pre class="brush: scala;">
     val i: Int = iOpt getOrElse 0
   </pre>
 </section>
 
 <section class="slide">
-   <h2>D6. Try again if None</h2>
-</section>
-
-<section class="slide">
-   <h2>D7. Flatmap!</h2>
+   <h2>D6. Monads! (flatmap)</h2>
    <h2>(Option[A], A => Option[B]) => Option[B]</h2>
+
+  <pre class="brush: scala;">
+    import scala.math.sqrt
+
+    def perfectSqrt(i: Int): Option[Int] = {
+      val root: Int = sqrt(i).toInt
+      if (root * root == i) Some(root) else None
+    }
+
+    val i: Int = //...
+
+    perfectSqrt(i).flatMap {
+      perfectSqrt(_).flatMap {
+        perfectSqrt(_)
+      }
+    }
+
+  </pre>
 </section>
 
 <section class="slide">
-   <h2>D8. Are you there?</h2>
-   <h2>Option[A] => Boolean</h2>
+   <h2>D7. Monads! (for-comprehensions)</h2>
+   <h2>(Option[A], A => Option[B]) => Option[B]</h2>
+
+  <pre class="brush: scala;">
+    def triplePerfectSqrt(i: Int): Option[Int] = for {
+      j <- perfectSqrt(i)
+      k <- perfectSqrt(j)
+      l <- perfectSqrt(k)
+    } yield l
+  </pre>
+</section>
+
+<section class="slide">
+  <h2>D8. Are you there?</h2>
+  <h2>Option[A] => Boolean</h2>
+
+  <pre class="brush: scala;">
+    val b1: Boolean = iOpt.isDefined
+
+    val b2: Boolean = iOpt.isEmpty
+  </pre>
 </section>
 
 <section class="slide">
    <h2>D9. Are you there and ...?</h2>
    <h2>(Option[A], A => Boolean) => Boolean</h2>
+
+  <pre class="brush: scala;">
+    val b1: Boolean = iOpt exists { _ > 0 }
+  </pre>
 </section>
+
+<section class="slide">
+   <h2>D10. Dealing with null</h2>
+   <h2>A => Option[A]</h2>
+
+  <pre class="brush: scala;">
+    //MAY RETURN NULL
+    def javaFunction(): String
+
+    val sOpt: Option[String] = Option(javaFunction())
+  </pre>
+</section>
+
 
 
 
