@@ -67,7 +67,7 @@
 </section>
 
 <section class="slide">
-  <h2>This section applies to Scala <= 2.10.0/2.9.3</h2>
+  <h2>This section applies to Scala < 2.10.0/2.9.3</h2>
   <h3>
     Since Scala's try/catch blocks use pattern matching,
     this section is just a review of what patterns are available to you.
@@ -170,7 +170,7 @@ catch {
 </section>
 
 <section class="slide">
-  <h2>A7. Catching all <code>Throwable</code></h2>
+  <h2>A7. Catching "everything"</h2>
   <pre class="brush: scala;">
 try {
   readFile("/opt/data").toInt
@@ -188,6 +188,18 @@ catch {
 <section class="slide">
   <h1>Section B:<br> What's wrong with exceptions?</h1>
 </section>
+
+<section class="slide">
+  <h2>Referential transparency</h2>
+  <h3>Is there a value the RHS of this assignment can be replaced with?</h3>
+  <pre class="brush: scala;">
+    val a1: Nothing = sys error "foo"
+  </pre>
+  <h3>No.</h3>
+  <h3>See <a href="http://www.manning.com/bjarnason/">Functional Programming in Scala</a>, chapter 4</h3>
+  <h3>... by Paul Chiusano and Rúnar Bjarnason</h3>
+</section>
+
 
 <section class="slide">
   <h1>Should I throw an exception?</h1>
@@ -223,6 +235,56 @@ catch {
   <h3>ALWAYS!</h3>
 </section>
 
+<section class="slide">
+  <h2>Try[A] (slightly simplified)</h2>
+  <pre class="brush: scala;">
+sealed trait Try[A]
+
+case class Failure[A](e: Throwable) extends Try[A]
+
+case class Success[A](value: A)     extends Try[A]
+  </pre>
+</section>
+
+<section class="slide">
+  <h2>C1. try/catch sans boilerplate</h2>
+  <pre class="brush: scala;">
+    import scala.util.Try
+
+    def tryReadFile(path: String): Try[String] = Try {
+      (Source fromFile path).mkString()
+    }
+  </pre>
+</section>
+
+<section class="slide">
+  <h2>C2. Matching on Try</h2>
+  <pre class="brush: scala;">
+    tryReadFile("/opt/data") match {
+      case Success(value) =>
+      case Failure(e)     =>
+    }
+  </pre>
+</section>
+
+
+<section class="slide">
+  <h2>C2.</h2>
+  <pre class="brush: scala;">
+  </pre>
+</section>
+
+
+<section class="slide">
+  <h2>C2.</h2>
+  <pre class="brush: scala;">
+  </pre>
+</section>
+
+
+
+
+
 
 <!-- SECTION D: Option -->
 
@@ -231,47 +293,77 @@ catch {
 </section>
 
 <section class="slide">
+  <h2>Option[A] (slightly simplified)</h2>
   <pre class="brush: scala;">
 sealed trait Option[A]
+
 case class Some[A](a: A) extends Option[A]
-case object None extends Option[Nothing]
+
+case object None         extends Option[Nothing]
   </pre>
 </section>
 
 <section class="slide">
-   <h2>Stop matching on <code>Option</code>!!</h2>
+  <h2>D1. Matching on Option</h2>
+  <h2>Option[A] => B</h2>
+  <pre class="brush: scala;">
+    val iOpt: Option[Int] = //...
+
+    val sOpt: Option[String] = iOpt match {
+      case Some(value) => value.toString
+      case None        => ""
+    }
+  </pre>
 </section>
 
 <section class="slide">
-   <h2>Only consider <code>Some</code></h2>
+   <h1>Stop matching on Option!!</h1>
+</section>
+
+
+<section class="slide">
+   <h2>D2. Only consider Some</h2>
+   <h2>(Option[A], A => B)) => Option[B]</h2>
+  <pre class="brush: scala;">
+    val sOpt: Option[String] = iOpt map { value => value.toString }
+
+    val sOpt: Option[String] = iOpt map { _.toString }
+  </pre>
 </section>
 
 <section class="slide">
-   <h2>Only consider <code>None</code></h2>
+   <h2>D3. Only consider None</h2>
 </section>
 
 <section class="slide">
-   <h2>Consider both cases</h2>
+   <h2>D4. Consider both cases</h2>
 </section>
 
 <section class="slide">
-   <h2>Provide default value</h2>
+   <h2>D5. Provide default value</h2>
+   <h2>(Option[A], A) => A</h2>
+  <pre class="brush: scala;">
+    val i: Int = iOpt getOrElse 0
+  </pre>
 </section>
 
 <section class="slide">
-   <h2>Try again if <code>None</code></h2>
+   <h2>D6. Try again if None</h2>
 </section>
 
 <section class="slide">
-   <h2>Flatmap!</h2>
+   <h2>D7. Flatmap!</h2>
+   <h2>(Option[A], A => Option[B]) => Option[B]</h2>
 </section>
 
 <section class="slide">
-   <h2>Are you there?</h2>
+   <h2>D8. Are you there?</h2>
+   <h2>Option[A] => Boolean</h2>
 </section>
 
 <section class="slide">
-   <h2>Are you there and ...?</h2>
+   <h2>D9. Are you there and ...?</h2>
+   <h2>(Option[A], A => Boolean) => Boolean</h2>
 </section>
 
 
@@ -313,7 +405,7 @@ case class Empty extends EmptyBox
 <!-- SECTION G: Validation -->
 
 <section class="slide">
-  <h2><code>Validation[A, B]</code></h2>
+  <h2>Validation[A, B]</h2>
 </section>
 
 <section class="slide">
@@ -329,7 +421,7 @@ case class Failure[E, A](e: E) extends Validation[E, A]
 <!-- SECTION G: ValidationNEL -->
 
 <section class="slide">
-  <h2><code>ValidationNEL[A, B]</code></h2>
+  <h2>ValidationNEL[A, B]</h2>
 </section>
 
 <section class="slide">
