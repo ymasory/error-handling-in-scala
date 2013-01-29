@@ -411,6 +411,7 @@ case class Failure[E, A](e: E) extends Validation[E, A]
   <h2>Validation[E, A] is very similar to Either[E, A]</h2>
   <h2>I won't repeat all the Either patterns.</h2>
   <h2>Caution:<br>syntax is in flux during the Scalaz 6 -> 7 rewrite.</h2>
+  <h2>Also, Scalaz has some enhancements to Option & Either that are worth a look.</h2>
 </section>
 
 <section class="slide">
@@ -428,8 +429,165 @@ type ValidationNEL[E, A] = Validation[NonEmptyList[E], A]
 </section>
 
 <section class="slide">
-  <h1>Aside:<br>type lambdas</h1>
+ <h2>Consider this domain</h2>
+ <pre class="brush: scala;">
+class Person(age: Int, clothes: String, sober: Boolean, male: Boolean)
+
+def checkAge(p: Person): Validation[String, Person] =
+  if (p.age < 18) Failure("too young!") else Success(p)
+
+def checkClothes(p: Person): Validation[String, Person] =
+  if (p.clothes contains "jeans") Failure("dress up!")
+  else Success(p)
+
+def checkSobriety(p: Person): Validation[String, Person] =
+  if (p.sober) Success(p) else Failure("sober up!")
+  </pre>
 </section>
+
+
+<section class="slide">
+ <h2>F1. Accumulate errors with applicative functors</h2>
+ <pre class="brush: scala;">
+def cost(p: Person): ValidationNEL[String, Int] = (
+  checkAge(p).liftFailNel |@| 
+  checkClothes(p).liftFailNel |@|
+  checkSobriety(p).liftFailNel) {
+    case (_, _, c) => if (c.male) 50 else 25
+  }
+ </pre>
+</section>
+
+
+<section class="slide">
+  <h2>Pretty cool right?</h2>
+  <h2>But what about a large (or unkown) number of checks?</h2>
+</section>
+
+
+<section class="slide">
+  <h1>Aside:<br>type lambdas<br>(<em>aka</em> job security)</h1>
+</section>
+
+
+<section class="slide">
+  <h2>Read this!
+    <a href="http://stackoverflow.com/questions/8736164/what-are-type-lambdas-in-scala-and-what-are-their-benefits">
+      What are type lambdas in Scala and what are their benefits?
+    </a>
+  </h2>
+</section>
+
+<section class="slide">
+ <h2>Nominal types</h2>
+ <pre class="brush: scala;">
+trait Duck {
+  def quack(): Unit
+}
+def foo(d: Duck) =
+ </pre>
+
+ <h2>Structural types</h2>
+ <pre class="brush: scala;">
+def foo(d: { def quack(): Unit }) =
+ </pre>
+
+ <h2>Duck "types" are structural types minus the static type system. (<em>I.e.</em>, runtime checking of compatability.)</h2>
+</section>
+
+<section class="slide">
+ <h2>Example: how can we make <br>Either[E, A] conform to the Monad trait?</h2>
+ <pre class="brush: scala;">
+trait Monad[M[_]]
+
+//Option is easy, since it only has one type parameter
+class OptionMonad[A] extends Monad[Option]
+
+//But what about Either? This won't compile.
+class EitherMonad[A] extends Monad[Either]
+
+//Neither will this.
+class EitherMonad[A] extends Monad[Either[E]]
+ </pre>
+</section>
+
+<section class="slide">
+ <h2>Can types be partially applied, like functions?</h2>
+ <h2>It was never intended, but it's possible with structural types!</h2>
+ <pre class="brush: scala;">
+//recall
+trait Monad[M[_]]
+
+//simple!
+class EitherMonad[A]
+  extends Monad[({type λ[α] = Either[A, α]})#λ] 
+ </pre>
+</section>
+
+<section class="slide">
+  <h1>Huh?</h1>
+</section>
+
+<section class="slide">
+  <h2>Let's build that one up?</h2>
+ <pre class="brush: scala;">
+// structural type with no restrictions, equivalent to AnyRef
+{}
+
+// what do you know!
+// the object defined by the structural type has a
+// type alias of the type we're looking for!
+{ type L[A] = Either[E, A] }
+
+// reference the desired type directly
+{ type L[A] = Either[E, A] }#L
+
+// this looks vaguely like a lambda expression, so ...
+{ type λ[α] = Either[E, α] }#λ
+ </pre>
+</section>
+
+<section class="slide">
+ <h2>Once again.</h2>
+ <pre class="brush: scala;">
+//recall
+trait Monad[M[_]]
+
+//simple!
+class EitherMonad[A]
+  extends Monad[({type λ[α] = Either[A, α]})#λ] 
+ </pre>
+ <h2>FYI: Type macros (part of Macro Paradise at present) will allow a nicer syntax.</h2>
+</section>
+
+<section class="slide">
+  <h1>/Aside</h1>
+</section>
+
+<section class="slide">
+ <h2>F2. Accumulate errors with traverse</h2>
+ <pre class="brush: scala;">
+def cost(p : Person) : ValidationNEL[String, Int] = {
+  val checks = List(
+    checkAge _,
+    checkClothes _,
+    checkSobriety _
+  )
+  checks.traverse[({type λ[α] = ValidationNEL[String, α]})#λ, Person](
+    _ andThen (_.liftFailNel) apply p
+  ) map {
+    case c :: _ => if (c.male) 50 else 25
+  }
+}
+ </pre>
+</section>
+
+
+
+
+
+
+
 
 <section class="slide">
   <h1>Aside:<br> Kleisli arrows</h1>
@@ -464,6 +622,7 @@ case class Empty extends EmptyBox
   <h2>Sorry! No time for Box.</h2>
   <h2>Take home message:<br> Box isn't as principled as Validation/NEL + Try, but check it out for an alternative way to accumulate errors.</h2>
 </section>
+
 
 
 
