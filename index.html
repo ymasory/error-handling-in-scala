@@ -66,6 +66,8 @@ def readFile(path: String) =
 
 <section class="slide">
   <h2>A1. Catch an exception</h2>
+import java.io.IOException
+
   <pre class="brush: scala;">
 import java.io.IOException
 
@@ -113,11 +115,14 @@ catch {
 <section class="slide">
   <h2>A4. Catching exceptions by message</h2>
   <pre class="brush: scala;">
+import java.io.IOException
+
 try {
   readFile("/opt/data").toInt
 }
 catch {
-  case e: Exception =>
+  case e: IOException if e.getMessage contains "Is a directory" =>
+  case e: IOException =>
 }
   </pre>
 </section>
@@ -141,7 +146,7 @@ try {
   readFile("/opt/data").toInt
 }
 catch {
-  //this will match scala.util.control.ControlThrowable
+  // this will match scala.util.control.ControlThrowable
   case _ =>
 }
   </pre>
