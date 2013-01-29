@@ -92,7 +92,7 @@ catch {
   <h2>A3. Subtyping exceptions</h2>
   <pre class="brush: scala;">
 try {
-  readFile("/opt/social-security").toInt
+  readFile("/opt/data").toInt
 }
 catch {
   // abstracting over:
@@ -106,19 +106,54 @@ catch {
 
 <section class="slide">
   <h2>A4. Catching exceptions by message</h2>
+  <pre class="brush: scala;">
+try {
+  readFile("/opt/data").toInt
+}
+catch {
+  case e: Exception =>
+}
+  </pre>
 </section>
 
 <section class="slide">
   <h2>A5. Catching all exceptions</h2>
+  <pre class="brush: scala;">
+try {
+  readFile("/opt/data").toInt
+}
+catch {
+  case e: Exception =>
+}
+  </pre>
 </section>
 
 <section class="slide">
   <h2>A6. DON'T DO THIS</h2>
+  <pre class="brush: scala;">
+try {
+  readFile("/opt/data").toInt
+}
+catch {
+  case _ =>
+}
+  </pre>
 </section>
 
 
 <section class="slide">
   <h2>A7. Catching all <code>Throwable</code></h2>
+  <pre class="brush: scala;">
+import scala.util.control.ControlThrowable
+
+try {
+  readFile("/opt/data").toInt
+}
+catch {
+  case t: ControlThrowable => throw t
+  case _                   =>
+}
+  </pre>
 </section>
 
 <section class="slide">
