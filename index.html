@@ -304,7 +304,7 @@ case object None         extends Option[Nothing]
 
 <section class="slide">
   <h2>D1. Matching on Option</h2>
-  <h2>Option[A] => B</h2>
+  <h2>(Option[A], Option[A] => B) => B</h2>
   <pre class="brush: scala;">
     val iOpt: Option[Int] = //...
 
@@ -457,7 +457,7 @@ case class Empty extends EmptyBox
 
 <section class="slide">
   <h2>Sorry! No time for Box.</h2>
-  <h2>Take home message:<br> Box isn't perfect, but check it out for an alternative way to accumulate errors.</h2>
+  <h2>Take home message:<br> Box isn't as principled as Validation/NEL + Try, but check it out for an alternative way to accumulate errors.</h2>
 </section>
 
 
