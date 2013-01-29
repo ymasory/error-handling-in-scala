@@ -45,6 +45,9 @@
   <h3>January 29, 2013</h3>
 </section>
 
+
+<!-- SECTION A: catch blocks. -->
+
 <section class="slide">
   <h1>Section A:<br> Basic exception handling</h1>
 </section>
@@ -65,8 +68,6 @@ import scala.io.Source
 def readFile(path: String) = (Source fromFile path).mkString()
 </pre>
 </section>
-
-
 
 <section class="slide">
   <h2>A1. Catch an exception</h2>
@@ -97,7 +98,6 @@ catch {
 }
   </pre>
 </section>
-
 
 <section class="slide">
   <h2>A3. Subtyping exceptions</h2>
@@ -158,7 +158,6 @@ catch {
   </pre>
 </section>
 
-
 <section class="slide">
   <h2>A7. Catching all <code>Throwable</code></h2>
   <pre class="brush: scala;">
@@ -172,12 +171,15 @@ catch {
   </pre>
 </section>
 
+
+<!-- SECTION B: Exceptions not pure. -->
+
 <section class="slide">
   <h1>Section B:<br> What's wrong with exceptions?</h1>
 </section>
 
 <section class="slide">
-  <h1>Section C:<br> Should I throw an exception?</h1>
+  <h1>Should I throw an exception?</h1>
 </section>
 
 <section class="slide">
@@ -198,12 +200,11 @@ catch {
 </section>
 
 
-
+<!-- SECTION C: Try -->
 
 <section class="slide">
-  <h2>D. Value-oriented exception handling</h2>
+  <h1>Section C:<br> Value-oriented exception handling</h1>
 </section>
-
 
 <section class="slide">
   <h2>This section applies to Scala >= 2.10.0/2.9.3</h2>
@@ -212,11 +213,15 @@ catch {
 </section>
 
 
+<!-- SECTION D: Option -->
+
+<section class="slide">
+  <h1>Section D:<br> scala.Option</h1>
+</section>
 
 <section class="slide">
   <h2><code>Option[A]</code></h2>
 </section>
-
 
 <section class="slide">
    <h2>Stop matching on <code>Option</code>!!</h2>
@@ -254,17 +259,33 @@ catch {
    <h2>Are you there and ...?</h2>
 </section>
 
+
+<!-- SECTION E: Either -->
+
+<section class="slide">
+  <h1>Section E<br> scala.util.Either</h1>
+</section>
+
 <section class="slide">
   <h2><code>Either[A, B]</code></h2>
 </section>
 
+
+<!-- SECTION F: Box -->
+
 <section class="slide">
-  <h2><code>Box</code></h2>
+  <h1>Section F:<br> net.liftweb.common.Box</h1>
 </section>
+
+
+<!-- SECTION G: Validation -->
 
 <section class="slide">
   <h2><code>Validation[A, B]</code></h2>
 </section>
+
+
+<!-- SECTION G: ValidationNEL -->
 
 <section class="slide">
   <h2><code>ValidationNEL[A, B]</code></h2>
