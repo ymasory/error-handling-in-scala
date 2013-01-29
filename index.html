@@ -54,9 +54,13 @@
 
 <section class="slide">
   <h2>Error Handling in Scala</h2>
+  <br>
   <h3>Yuvi Masory - <a href="https://twitter.com/ymasory">@ymasory</a></h3>
   <h3>Scala for Startups</h3>
   <h3>January 29, 2013</h3>
+  <br>
+  <br>
+  <h3>Slides live at <a href="http://yuvimasory.com/talks">http://yuvimasory.com/talks</a>.</h3>
 </section>
 
 
@@ -197,8 +201,7 @@ catch {
     val a1: Nothing = sys error "foo"
   </pre>
   <h3>No.</h3>
-  <h3>See <a href="http://www.manning.com/bjarnason/">Functional Programming in Scala</a>, chapter 4</h3>
-  <h3>... by Paul Chiusano and Rúnar Bjarnason</h3>
+  <h3>See <a href="http://www.manning.com/bjarnason/">Functional Programming in Scala</a>, chapter 4.</h3>
 </section>
 
 
@@ -235,6 +238,7 @@ catch {
   <h2>This section applies to Scala >= 2.10.0/2.9.3</h2>
   <h3>When should you use these patterns over those in Section A?</h3>
   <h3>ALWAYS!</h3>
+  <h3>Read this! <a href="http://www.iulidragos.org/?p=218">Abstracting exception handlers in Scala</a></h3>
 </section>
 
 <section class="slide">
@@ -378,7 +382,7 @@ case object None         extends Option[Nothing]
   <pre class="brush: scala;">
 sealed trait Either[E, A]
 
-case class Left[E](e: E) extends Either[E, A]
+case class Left[E](e: E)  extends Either[E, A]
 
 case class Right[A](a: A) extends Either[E, A]
   </pre>
@@ -411,6 +415,7 @@ case class Failure[E, A](e: E) extends Validation[E, A]
 
 <section class="slide">
   <h2>Wouldn't it be nice if we could accumulate errors, instead of stopping on the first one?</h2>
+  <h2>Read this! <a href="https://gist.github.com/970717">A Tale of 3 Night Clubs</a></h2>
 </section>
 
 <section class="slide">
@@ -445,7 +450,7 @@ sealed trait Box[A]
 
 case class Full[A](a: A) extends Box[A]
 
-abstract class EmptyBox extends Box[Nothing]
+abstract class EmptyBox  extends Box[Nothing]
 
 case class Failure(
   msg: String, e: Box[Throwable], chain: Box[Failure]
