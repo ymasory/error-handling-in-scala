@@ -66,7 +66,6 @@ def readFile(path: String) =
 
 <section class="slide">
   <h2>A1. Catch an exception</h2>
-import java.io.IOException
 
   <pre class="brush: scala;">
 import java.io.IOException
@@ -81,7 +80,7 @@ catch {
 </section>
 
 <section class="slide">
-  <h2>A2. Catching Multiple Exceptions</h2>
+  <h2>A2. Catching multiple types</h2>
   <pre class="brush: scala;">
 import java.io.IOException
 import java.lang.NumberFormatException
@@ -99,15 +98,18 @@ catch {
 <section class="slide">
   <h2>A3. Subtyping exceptions</h2>
   <pre class="brush: scala;">
+import java.nio.file.{ Files, FileSystemException, FileSystems }
+
 try {
-  readFile("/opt/data").toInt
+  val path = FileSystems.getDefault getPath "/opt/data"
+  Files readAllBytes path
 }
 catch {
   // abstracting over:
   //   - java.nio.file.NoSuchFileExceptions
   //   - java.nio.file.NotDirectoryException
   //   - all other subclasses
-  case e: java.nio.file.FileSystemException =>
+  case e: FileSystemException =>
 }
   </pre>
 </section>
