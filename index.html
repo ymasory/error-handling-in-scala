@@ -39,12 +39,23 @@
 </section>
 
 <section class="slide">
-  <h2>Basic exception handling</h2>
+  <h2>A. Basic exception handling</h2>
+</section>
+
+<section class="slide">
+  <h2>Consider this function</h2>
+<pre>
+import scala.io.Source
+
+def readFile(path: String) =
+  (Source fromFile path).mkString()
+</pre>
 </section>
 
 
+
 <section class="slide">
-  <h2>Exception Handling</h2>
+  <h2>A1. Catch an exception</h2>
   <pre>
 try {
   readFile("/opt/data")
@@ -56,7 +67,7 @@ catch {
 </section>
 
 <section class="slide">
-  <h2>Catching Multiple Exceptions</h2>
+  <h2>A2. Catching Multiple Exceptions</h2>
   <pre>
 try {
   readFile("/opt/social-security").toInt
@@ -69,24 +80,36 @@ catch {
 
 
 <section class="slide">
-  <h2>Subtyping Exceptions</h2>
+  <h2>A3. Subtyping exceptions</h2>
+  <pre>
+try {
+  readFile("/opt/social-security").toInt
+}
+catch {
+  // abstracting over:
+  //   - java.nio.file.NoSuchFileExceptions
+  //   - java.nio.file.NotDirectoryException
+  //   - all other subclasses
+  case e: java.nio.file.FileSystemException =>
+}
+  </pre>
 </section>
 
 <section class="slide">
-  <h2>Catching Exceptions By Message</h2>
+  <h2>A4. Catching exceptions by message</h2>
 </section>
 
 <section class="slide">
-  <h2>Catching All Exceptions</h2>
+  <h2>A5. Catching all exceptions</h2>
 </section>
 
 <section class="slide">
-  <h2>DON'T DO THIS</h2>
+  <h2>A6. DON'T DO THIS</h2>
 </section>
 
 
 <section class="slide">
-  <h2>Catching <code>Throwable</code></h2>
+  <h2>A7. Catching all <code>Throwable</code></h2>
 </section>
 
 <section class="slide">
