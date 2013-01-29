@@ -38,6 +38,20 @@
 
 <!-- Begin slides. Just make elements with a class of slide. -->
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <section class="slide">
   <h2>Error Handling in Scala</h2>
   <h3>Yuvi Masory - <a href="https://twitter.com/ymasory">@ymasory</a></h3>
@@ -87,7 +101,6 @@ catch {
 <section class="slide">
   <h2>A2. Catching multiple types</h2>
   <pre class="brush: scala;">
-import java.io.IOException
 import java.lang.NumberFormatException
 
 try {
@@ -121,8 +134,6 @@ catch {
 <section class="slide">
   <h2>A4. Catching exceptions by message</h2>
   <pre class="brush: scala;">
-import java.io.IOException
-
 try {
   readFile("/opt/data").toInt
 }
@@ -191,7 +202,7 @@ catch {
       <h3>Answer 2: If you're going to catch it, no.</h3>
     </li>
     <li>
-      <h3>
+     <h3>
         Answer 3: If you're going to catch it anywhere except the top-level "loop" of your application
         (E.g., Scalatra route handler, Play action, or Swing event loop), no.
       </h3>
@@ -220,7 +231,11 @@ catch {
 </section>
 
 <section class="slide">
-  <h2><code>Option[A]</code></h2>
+  <pre class="brush: scala;">
+sealed trait Option[A]
+case class Some[A](a: A) extends Option[A]
+case object None extends Option[Nothing]
+  </pre>
 </section>
 
 <section class="slide">
@@ -263,11 +278,15 @@ catch {
 <!-- SECTION E: Either -->
 
 <section class="slide">
-  <h1>Section E<br> scala.util.Either</h1>
+  <h1>Section E:<br> scala.util.Either</h1>
 </section>
 
 <section class="slide">
-  <h2><code>Either[A, B]</code></h2>
+  <pre class="brush: scala;">
+sealed trait Either[E, A]
+case class Left[E](e: E) extends Either[E, A]
+case class Right[A](a: A) extends Either[E, A]
+  </pre>
 </section>
 
 
@@ -277,6 +296,19 @@ catch {
   <h1>Section F:<br> net.liftweb.common.Box</h1>
 </section>
 
+<section class="slide">
+  <pre class="brush: scala;">
+sealed trait Box[A]
+
+case class Full[A](a: A) extends Box[A]
+
+abstract class EmptyBox extends Box[Nothing]
+case class Failure(msg: String, e: Box[Throwable], chain: Box[Failure])
+  extends EmptyBox
+case class Empty extends EmptyBox
+  </pre>
+</section>
+
 
 <!-- SECTION G: Validation -->
 
@@ -284,11 +316,26 @@ catch {
   <h2><code>Validation[A, B]</code></h2>
 </section>
 
+<section class="slide">
+ <pre class="brush: scala;">
+sealed trait Validation[E, A]
+case class Success[E, A](a: A) extends Validation[E, A]
+case class Failure[E, A](e: E) extends Validation[E, A]
+  </pre>
+</section>
+
+
 
 <!-- SECTION G: ValidationNEL -->
 
 <section class="slide">
   <h2><code>ValidationNEL[A, B]</code></h2>
+</section>
+
+<section class="slide">
+ <pre class="brush: scala;">
+type ValidationNEL[A, B] = Validation[NonEmptyList[A], B]
+  </pre>
 </section>
 
 <section class="slide">
