@@ -46,10 +46,15 @@
 </section>
 
 <section class="slide">
-  <h2>A. Basic exception handling</h2>
-  <h2>(Scala <= 2.10.0/2.9.3)</h2>
-Since Scala's try/catch blocks use pattern matching,
-this section is just a review of what patterns are available to you.
+  <h1>Section A:<br> Basic exception handling</h1>
+</section>
+
+<section class="slide">
+  <h2>This section applies to Scala <= 2.10.0/2.9.3</h2>
+  <h3>
+    Since Scala's try/catch blocks use pattern matching,
+    this section is just a review of what patterns are available to you.
+  </h3>
 </section>
 
 <section class="slide">
@@ -168,20 +173,26 @@ catch {
 </section>
 
 <section class="slide">
-  <h2>B. What's wrong with exceptions?</h2>
+  <h1>Section B:<br> What's wrong with exceptions?</h1>
 </section>
 
 <section class="slide">
-  <h2>C. Should I throw an exception?</h2>
+  <h1>Section C:<br> Should I throw an exception?</h1>
+</section>
+
+<section class="slide">
   <ul>
     <li>
-      Answer 1: No.
+      <h3>Answer 1: No.</h3>
     </li>
     <li>
-      Answer 2: If you're going to catch it, no.
+      <h3>Answer 2: If you're going to catch it, no.</h3>
     </li>
     <li>
-      Answer 3: If you're going to catch it anywhere except the top-level "loop" of your application (E.g., Scalatra route handler, Play action, or Swing event loop), no.
+      <h3>
+        Answer 3: If you're going to catch it anywhere except the top-level "loop" of your application
+        (E.g., Scalatra route handler, Play action, or Swing event loop), no.
+      </h3>
     </li>
   </ul>
 </section>
@@ -191,8 +202,15 @@ catch {
 
 <section class="slide">
   <h2>D. Value-oriented exception handling</h2>
-  <h2>(Scala >= 2.10.0/2.9.3)</h2>
 </section>
+
+
+<section class="slide">
+  <h2>This section applies to Scala >= 2.10.0/2.9.3</h2>
+  <h3>When should you use these patterns over those in Section A?</h3>
+  <h3>ALWAYS!</h3>
+</section>
+
 
 
 <section class="slide">
