@@ -71,7 +71,6 @@
 </section>
 
 <section class="slide">
-  <h2>This section applies to Scala < 2.10.0/2.9.3</h2>
   <h3>
     Since Scala's try/catch blocks use pattern matching,
     this section is just a review of what patterns are available to you.
@@ -248,11 +247,14 @@ catch {
   <h2>import scala.util.control._</h2>
   <ul>
     <li class="slide">
-      <h3>This section applies to Scala >= 2.10.0/2.9.3</h3>
-    </li>
-    <li class="slide">
       <h3>When should you use these patterns over those in Section A?</h3>
       <h3 class="slide">ALWAYS!</h3>
+    </li>
+    <li class="slide">
+      <h3>
+        Since this is a regular libary, operating on standard values and
+        types, the opportunities for extension and customization are endless.
+      </h3>
     </li>
     <li class="slide">
       <h3>Read this! <a href="http://www.iulidragos.org/?p=218">Abstracting exception handlers in Scala</a></h3>
@@ -285,6 +287,9 @@ case class Success[A](value: A)     extends Try[A]
 <section class="slide">
   <h2>C2. Matching on Try</h2>
   <pre class="brush: scala;">
+    import scala.util.control._
+    import scala.util.control.Exception._
+
     tryReadFile("/opt/data") match {
       case Success(value) =>
       case Failure(e)     =>
@@ -294,17 +299,142 @@ case class Success[A](value: A)     extends Try[A]
 
 
 <section class="slide">
-  <h2>C2.</h2>
+  <h2>Catch[A]</h2>
   <pre class="brush: scala;">
+    val c: Catch[A] = catching(classOf[IOException])
   </pre>
 </section>
 
 
 <section class="slide">
-  <h2>C2.</h2>
+  <h2>C3. Converting to Option</h2>
   <pre class="brush: scala;">
+    val sOpt: Option[String] =
+      catching(classOf[IOException]).opt {
+        readFile("/opt/data")
+      }
   </pre>
 </section>
+
+<section class="slide">
+  <h2>C3. Converting to Option, cont ...</h2>
+  <pre class="brush: scala;">
+    val sOpt: Option[String] =
+      failing(classOf[IOException]) {
+        readFile("/opt/data")
+      }
+  </pre>
+</section>
+
+
+<section class="slide">
+  <h2>C4. Converting to Either</h2>
+  <pre class="brush: scala;">
+    val eith: Either[Throwable, String] =
+      catching(classOf[IOException]).either {
+        readFile("/opt/data")
+      }
+  </pre>
+</section>
+
+<section class="slide">
+  <h2>C5. Side-effecting</h2>
+  <pre class="brush: scala;">
+    val unit: Unit =
+      ignoring(classOf[IOException], classOf[NumberFormatException]) {
+        println(readFile("/opt/social-security").toInt)
+      }
+  </pre>
+</section>
+
+<section class="slide">
+  <h2>C6. DON'T DO THIS</h2>
+  <pre class="brush: scala;">
+    allCatch {
+      readFile("/opt/data")
+    }
+  </pre>
+</section>
+
+<section class="slide">
+  <h2>C7. Catching "nonfatal" errors</h2>
+  <pre class="brush: scala;">
+    nonFatal {
+      readFile("/opt/data")
+    }
+  </pre>
+</section>
+
+<section class="slide">
+  <h2>Which errors are "fatal"?</h2>
+  <ul>
+    <li class="slide">VirtualMachineError (includes OutOfMemoryError)</li>
+    <li class="slide">ThreadDeath</li>
+    <li class="slide">InterruptedException</li>
+    <li class="slide">LinkageError</li>
+    <li class="slide">ControlThrowable</li>
+    <li class="slide">NotImplementedError</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2>C7. Catching "nonfatal" errors, cont ...</h2>
+  <pre class="brush: scala;">
+    try {
+      readFile("/opt/data")
+    } catch {
+      case NonFatal(e) =>
+    }
+  </pre>
+</section>
+
+<section class="slide">
+  <h2>C8. Provide a default value</h2>
+  <pre class="brush: scala;">
+    failAsValue(classOf[IOException])("") {
+      readFile("/opt/data")
+    }
+  </pre>
+</section>
+
+<section class="slide">
+  <h2>C9. Custom error handling</h2>
+  <h2>(I'm still working on this one ...)</h2>
+  <pre class="brush: scala;">
+    def logError(t: Throwable): Int = {
+      println("Error: " + t)
+      -1
+    }
+
+    def loggingExceptions(block: => A) =
+      catching(classOf[Exception]).withApply {
+        logError _
+      }.apply(block)
+  </pre>
+</section>
+
+<section class="slide">
+  <h2>C10. What about finally?</h2>
+  <ul>
+    <li class="slide">
+      <h3>With catch logic</h3>
+      <pre class="brush: scala;">
+        catching(classOf[IOException]).andFinally {
+          println("cleanup")
+        }.apply { readFile("/opt/data") }
+      </pre>
+    </li>
+    <li class="slide">
+      <h3>No catch logic</h3>
+      <pre class="brush: scala;">
+        ultimately(println("cleanup")) {
+          readFile("/opt/data")
+        }
+      </pre>
+    </li>
+  </ul>
+</section>
+
 
 
 
