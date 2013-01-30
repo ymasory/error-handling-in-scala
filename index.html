@@ -252,9 +252,7 @@ catch {
     </li>
     <li class="slide">
       <h3>When should you use these patterns over those in Section A?</h3>
-    </li>
-    <li class="slide">
-      <h3>ALWAYS!</h3>
+      <h3 class="slide">ALWAYS!</h3>
     </li>
     <li class="slide">
       <h3>Read this! <a href="http://www.iulidragos.org/?p=218">Abstracting exception handlers in Scala</a></h3>
@@ -329,7 +327,7 @@ case object None         extends Option[Nothing]
 
 <section class="slide">
   <h2>D1. Matching on Option</h2>
-  <h2>(Option[A], Option[A] => B) => B</h2>
+  <h3>(Option[A], Option[A] => B) => B</h3>
   <pre class="brush: scala;">
     val iOpt: Option[Int] = //...
 
@@ -347,7 +345,7 @@ case object None         extends Option[Nothing]
 
 <section class="slide">
    <h2>D2. Only consider Some</h2>
-   <h2>(Option[A], A => B)) => Option[B]</h2>
+   <h3>(Option[A], A => B)) => Option[B]</h3>
   <pre class="brush: scala;">
     val sOpt: Option[String] =
       iOpt map { value => value.toString }
@@ -358,8 +356,8 @@ case object None         extends Option[Nothing]
 </section>
 
 <section class="slide">
-   <h2>D3. More chances</h2>
-  <h2>(Option[A], Option[A]) => Option[A]</h2>
+  <h2>D3. More chances</h2>
+  <h3>(Option[A], Option[A]) => Option[A]</h3>
 
   <pre class="brush: scala;">
     def foo(i: Int): Option[String]
@@ -377,7 +375,7 @@ case object None         extends Option[Nothing]
 
 <section class="slide">
   <h2>D4. Consider both cases</h2>
-  <h2>(Option[A], B, A => B)) => B</h2>
+  <h3>(Option[A], B, A => B)) => B</h3>
 
   <pre class="brush: scala;">
     val sOpt: Option[String] =
@@ -388,7 +386,7 @@ case object None         extends Option[Nothing]
 
 <section class="slide">
   <h2>D5. Provide default value</h2>
-  <h2>(Option[A], A) => A</h2>
+  <h3>(Option[A], A) => A</h3>
 
   <pre class="brush: scala;">
     val i: Int = iOpt getOrElse 0
@@ -397,7 +395,7 @@ case object None         extends Option[Nothing]
 
 <section class="slide">
    <h2>D6. Monads! (flatmap)</h2>
-   <h2>(Option[A], A => Option[B]) => Option[B]</h2>
+   <h3>(Option[A], A => Option[B]) => Option[B]</h3>
 
   <pre class="brush: scala;">
     import scala.math.sqrt
@@ -420,7 +418,7 @@ case object None         extends Option[Nothing]
 
 <section class="slide">
    <h2>D7. Monads! (for-comprehensions)</h2>
-   <h2>(Option[A], A => Option[B]) => Option[B]</h2>
+   <h3>(Option[A], A => Option[B]) => Option[B]</h3>
 
   <pre class="brush: scala;">
     def triplePerfectSqrt(i: Int): Option[Int] = for {
@@ -433,7 +431,7 @@ case object None         extends Option[Nothing]
 
 <section class="slide">
   <h2>D8. Are you there?</h2>
-  <h2>Option[A] => Boolean</h2>
+  <h3>Option[A] => Boolean</h3>
 
   <pre class="brush: scala;">
     val b1: Boolean = iOpt.isDefined
@@ -443,8 +441,8 @@ case object None         extends Option[Nothing]
 </section>
 
 <section class="slide">
-   <h2>D9. Are you there and ...?</h2>
-   <h2>(Option[A], A => Boolean) => Boolean</h2>
+  <h2>D9. Are you there and ...?</h2>
+  <h3>(Option[A], A => Boolean) => Boolean</h3>
 
   <pre class="brush: scala;">
     val b1: Boolean = iOpt exists { _ > 0 }
@@ -453,7 +451,7 @@ case object None         extends Option[Nothing]
 
 <section class="slide">
    <h2>D10. Dealing with null</h2>
-   <h2>A => Option[A]</h2>
+   <h3>A => Option[A]</h3>
 
   <pre class="brush: scala;">
     //MAY RETURN NULL
@@ -464,7 +462,7 @@ case object None         extends Option[Nothing]
 </section>
 
 <section class="slide">
-   <h2>D11. Only execute if all the Options are defined</h2>
+  <h2>D11. Only execute if all the Options are defined</h2>
 
   <pre class="brush: scala;">
     val iOpt: Option[Int] = //...
@@ -527,7 +525,18 @@ case class Right[A](a: A) extends Either[E, A]
 </section>
 
 <section class="slide">
-  <h2>Either isn't "right-based" or "left-based", so you need to deal with <em>projections</em>.</h2>
+  <h2>Where are all the Either methods?!</h2>
+  <ul>
+    <li class="slide">
+      <h3>Do higher order functions operate on the Left or Right case?</h3>
+    </li>
+    <li class="slide">
+      <h3>Either isn't "right-based" or "left-based".</h3>
+    </li>
+    <li class="slide">
+      <h3>You will work with left and right <em>projections</em>.</h3>
+    </li>
+  </ul>
 </section>
 
 <section class="slide">
@@ -560,14 +569,16 @@ case class Right[A](a: A) extends Either[E, A]
   <ul>
     <h2>Homework</h2>
     <li class="slide">
-      <h2>
-        Most of the Option patterns apply to the right and left Either projections.
-      </h2>
+      <h3>
+        Most of the Option patterns apply to the right and left
+        Either projections.
+      </h3>
     </li>
     <li class="slide">
-      <h2>
-        I'll leave browsing the Either.LeftProjection and Either.RightProjection scaladocs to you.
-      </h2>
+      <h3>
+        I'll leave browsing the Either.LeftProjection and
+        Either.RightProjection scaladocs to you.
+      </h3>
     </li>
 </section>
 
@@ -862,12 +873,11 @@ def cost(p : Person) : ValidationNEL[String, Int] = {
     checkClothes _,
     checkSobriety _
   )
-  checks.traverse[({type λ[α] =
-    ValidationNEL[String, α]})#λ, Person](
-      _ andThen (_.liftFailNel) apply p
-    ) map {
-      case c :: _ => if (c.male) 50 else 25
-    }
+  checks.traverse[({type λ[α] = ValidationNEL[String, α]})#λ, Person](
+    _ andThen (_.liftFailNel) apply p
+  ) map {
+    case c :: _ => if (c.male) 50 else 25
+  }
 }
  </pre>
 </section>
