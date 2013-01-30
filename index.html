@@ -482,6 +482,72 @@ case class Right[A](a: A) extends Either[E, A]
   </pre>
 </section>
 
+<section class="slide">
+  <h2>E1: Pattern matching on Either</h2>
+  <h2>(Either[E, A], E => B, A => B) => B</h2>
+
+  <pre class="brush: scala;">
+    val eith: Either[Int, String] = //...
+
+    eith match {
+      case Left(e)      =>
+      case Right(value) =>
+    }
+  </pre>
+</section>
+
+<section class="slide">
+  <h2>E2: Consider Left and Right both</h2>
+  <h2>(Either[E ,A], E => B, A => B) => B</h2>
+
+  <pre class="brush: scala;">
+    eith.fold(
+      _.toString,
+      _.reverse
+    )
+  </pre>
+</section>
+
+<section class="slide">
+  <h2>Either isn't "right-based" or "left-based", so you need to deal with <em>projections</em>.</h2>
+</section>
+
+<section class="slide">
+  <h2>E3: Get the <em>first</em> failure, else proceed</h2>
+  <pre class="brush: scala;">
+    def div(i: Int, j: Int): Either[String, Int] =
+      if (j != 0) Right(i / j)
+      else Left(s"can't divide $i by 0!")
+
+    val i, j, k, l, m, n = // ... integers
+
+    for {
+      i <- div(j, k).right
+      l <- div(m, n).right
+    } yield i + l
+  </pre>
+</section>
+
+<section class="slide">
+  <h2>E3: Get the <em>first</em> success, or procceed</h2>
+  <pre class="brush: scala;">
+    for {
+      i <- div(j, k).left
+      l <- div(m, n).left
+    } yield i + l
+  </pre>
+</section>
+
+<section class="slide">
+  <h2>Most of the Option patterns apply to the right and left projections.</h2>
+  <h2>I'll leave browsing the Either.LeftProjection and Either.RightProjection scaladocs to you..</h2>
+</section>
+
+
+
+
+
+
 
 
 <!-- SECTION F: ValidationNEL -->
